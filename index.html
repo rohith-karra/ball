@@ -7,11 +7,17 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Save the Fox!</title>
     <style>
-        body {
+         body {
             margin: 0;
             overflow: hidden;
-            background-color: #87CEEB; /* Sky blue background */
-            font-family: Arial, sans-serif;
+            background: repeating-linear-gradient(
+                45deg,
+                #0f0a1e,
+                #0f0a1e 20px,
+                #231a3d 20px,
+                #231a3d 40px
+            ); /* Retro CRT screen effect */
+            font-family: 'Courier New', Courier, monospace;
         }
 
         #game-container {
@@ -19,13 +25,41 @@
             width: 100vw;
             height: 100vh;
         }
+        /* Add CRT screen effect */
+        #game-container::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            animation: scanline 2s linear infinite;
+        }
+
+        @keyframes scanline {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
 
         #ground {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 100px; /* Fixed ground height */
-            background-color: #8B4513; /* Brown ground */
+            height: 100px;
+            background: repeating-linear-gradient(
+                45deg,
+                #2d180a,
+                #2d180a 10px,
+                #4a2b1a 10px,
+                #4a2b1a 20px
+            ); /* Retro ground pattern */
+            border-top: 4px solid #ff6b6b;
         }
 
         #fox {
@@ -37,16 +71,11 @@
             background-image: url('fox.png');
             background-size: cover;
             animation: run 5s linear infinite alternate;
+            filter: drop-shadow(2px 2px 0 #000);
         }
         @keyframes run {
-            0% {
-                left: 0;
-                transform: translateX(0) scaleX(1);
-            }
-            100% {
-                left: calc(100% - 100px);
-                transform: translateX(0) scaleX(1);
-            }
+            0% { left: 0; }
+            100% { left: calc(100% - 100px); }
         }
 
         .falling-object {
@@ -56,11 +85,19 @@
             background-image: url('fire.png');
             background-size: cover;
             cursor: pointer;
-            animation: float 0.3s ease-in-out infinite alternate;
+            animation: 
+                float 0.3s ease-in-out infinite alternate,
+                retro-pulse 1s ease-in-out infinite;
+            filter: hue-rotate(90deg) saturate(200%);
         }
         @keyframes float {
             from { transform: translateY(0); }
             to { transform: translateY(-5px); }
+        }
+        @keyframes retro-pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
         }
 
         #score-board {
@@ -68,7 +105,11 @@
             top: 20px;
             left: 20px;
             font-size: 24px;
-            color: #333;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0 #000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border: 2px solid #ff6b6b;
         }
 
         #game-over {
@@ -77,12 +118,30 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: white;
+            background: #0f0a1e;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            border: 4px solid #ff6b6b;
+            color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255,107,107,0.3);
         }
+        #game-over button {
+            background: #ff6b6b;
+            color: #0f0a1e;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        #game-over button:hover {
+            background: #ff8b8b;
+            transform: scale(1.1);
+        }
+
     </style>
 </head>
 <body>
