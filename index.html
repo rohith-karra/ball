@@ -143,7 +143,7 @@
 
                 // End game if any arrow hits the ground
                 const groundHeight = 100; // Fixed ground height
-                if (currentTop > window.innerHeight - groundHeight - 20) { // Adjusted for ground height
+                if (currentTop > window.innerHeight - groundHeight) { // Adjusted for ground height (if any problem change to 20 0r 40)
                     endGame();
                     return;
                 }
