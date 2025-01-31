@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catch the Falling Objects</title>
+    <title>Save the Fox!</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #f0f0f0;
+            background-color: #87CEEB; /* Sky blue background */
             font-family: Arial, sans-serif;
         }
 
@@ -18,14 +18,33 @@
             height: 100vh;
         }
 
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #8B4513; /* Brown ground */
+        }
+
+        #fox {
+            position: absolute;
+            bottom: 90px; /* On top of the ground */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background-image: url('fox.png'); /* Local fox image */
+            background-size: cover;
+            border-radius: 50%; /* Fallback shape */
+        }
+
         .falling-object {
             position: absolute;
-            width: 50px;
+            width: 60px;
             height: 50px;
-            background-color: #ff4444;
-            border-radius: 50%;
+            background-image: url('fire.png'); /* Local arrow image */
+            background-size: cover;
             cursor: pointer;
-            transition: transform 0.1s;
         }
 
         #score-board {
@@ -52,17 +71,20 @@
 </head>
 <body>
     <div id="game-container">
+        <div id="ground"></div>
+        <div id="fox"></div>
         <div id="score-board">Score: 0</div>
         <div id="game-over">
             <h2>Game Over!</h2>
+            <p>The fox couldn't be saved...</p>
             <p>Final Score: <span id="final-score">0</span></p>
-            <button onclick="startGame()">Play Again</button>
+            <button onclick="startGame()">Try Again</button>
         </div>
     </div>
 
     <script>
         let score = 0;
-        let speed = 4; // Initial speed (2x faster)
+        let speed = 4; // Initial speed
         let gameInterval;
         let moveInterval;
         let speedIncreaseInterval;
@@ -72,13 +94,9 @@
             object.className = 'falling-object';
             
             // Random horizontal position
-            const xPos = Math.random() * (window.innerWidth - 70);
+            const xPos = Math.random() * (window.innerWidth - 40);
             object.style.left = `${xPos}px`;
-            object.style.top = '-70px';
-
-            // Random color
-            const colors = ['#ff4444', '#44ff44', '#4444ff'];
-            object.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            object.style.top = '-40px';
 
             // Add click event
             object.addEventListener('click', () => {
@@ -97,8 +115,8 @@
                 const currentTop = parseFloat(object.style.top);
                 object.style.top = `${currentTop + speed}px`;
 
-                // End game if any ball touches the ground
-                if (currentTop > window.innerHeight - 70) {
+                // End game if any arrow hits the ground
+                if (currentTop > window.innerHeight - 140) { // Adjusted for ground height
                     endGame();
                     return;
                 }
