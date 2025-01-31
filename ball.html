@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Objects</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .falling-object {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4444;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        #score-board {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="score-board">Score: 0</div>
+    </div>
+
+    <script>
+        let score = 0;
+        let gameInterval;
+        let moveInterval;
+
+        function createFallingObject() {
+            const object = document.createElement('div');
+            object.className = 'falling-object';
+            
+            // Random horizontal position
+            const xPos = Math.random() * (window.innerWidth - 50);
+            object.style.left = `${xPos}px`;
+            object.style.top = '-50px';
+
+            // Random color
+            const colors = ['#ff4444', '#44ff44', '#4444ff'];
+            object.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            // Add click event
+            object.addEventListener('click', () => {
+                score += 10;
+                document.getElementById('score-board').textContent = `Score: ${score}`;
+                object.remove();
+            });
+
+            document.getElementById('game-container').appendChild(object);
+            return object;
+        }
+
+        function moveObjects() {
+            const objects = document.getElementsByClassName('falling-object');
+            for (let object of objects) {
+                const currentTop = parseFloat(object.style.top);
+                object.style.top = `${currentTop + 2}px`; // Increased speed to 8px per frame
+
+                // Remove objects that fall off screen
+                if (currentTop > window.innerHeight) {
+                    object.remove();
+                }
+            }
+        }
+
+        function startGame() {
+            // Create new objects every 800ms
+            gameInterval = setInterval(() => {
+                createFallingObject();
+            }, 800);
+
+            // Move objects every 20ms for smoother animation
+            moveInterval = setInterval(moveObjects, 20);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
