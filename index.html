@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Save the Fox!</title>
     <style>
         body {
@@ -28,23 +30,37 @@
 
         #fox {
             position: absolute;
-            bottom: 90px; /* On top of the ground */
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 90px;
+            left: 0;
             width: 100px;
             height: 100px;
-            background-image: url('fox.png'); /* Local fox image */
+            background-image: url('fox.png');
             background-size: cover;
-            border-radius: 50%; /* Fallback shape */
+            animation: run 5s linear infinite alternate;
+        }
+        @keyframes run {
+            0% {
+                left: 0;
+                transform: translateX(0) scaleX(1);
+            }
+            100% {
+                left: calc(100% - 100px);
+                transform: translateX(0) scaleX(1);
+            }
         }
 
         .falling-object {
             position: absolute;
             width: 60px;
             height: 50px;
-            background-image: url('fire.png'); /* Local arrow image */
+            background-image: url('fire.png');
             background-size: cover;
             cursor: pointer;
+            animation: float 0.3s ease-in-out infinite alternate;
+        }
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
         }
 
         #score-board {
@@ -99,10 +115,12 @@
             const object = document.createElement('div');
             object.className = 'falling-object';
             
-            // Random horizontal position
-            const xPos = Math.random() * (window.innerWidth - 40);
+            // Adjusted horizontal position calculation
+            const objectWidth = 60; // Match CSS width
+            const maxX = window.innerWidth - objectWidth;
+            const xPos = Math.random() * maxX;
             object.style.left = `${xPos}px`;
-            object.style.top = '-40px';
+            object.style.top = '-50px';
 
             // Add click event
             object.addEventListener('click', () => {
