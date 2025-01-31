@@ -181,14 +181,25 @@
             object.style.left = `${xPos}px`;
             object.style.top = '-50px';
 
-            // Add click event
-            object.addEventListener('click', () => {
-                if (!isGameOver) { // Only allow clicks if game is not over
+            object.addEventListener('click', handleClick);
+            object.addEventListener('touchstart', handleClick);
+
+            function handleClick() {
+                if (!isGameOver) {
                     score += 5;
                     document.getElementById('score-board').textContent = `Score: ${score}`;
-                    object.remove();
+                    this.remove();
                 }
-            });
+            }
+
+            // // Add click event
+            // object.addEventListener('click', () => {
+            //     if (!isGameOver) { // Only allow clicks if game is not over
+            //         score += 5;
+            //         document.getElementById('score-board').textContent = `Score: ${score}`;
+            //         object.remove();
+            //     }
+            // });
 
             document.getElementById('game-container').appendChild(object);
             return object;
