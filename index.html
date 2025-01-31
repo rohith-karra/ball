@@ -125,7 +125,7 @@
             // Add click event
             object.addEventListener('click', () => {
                 if (!isGameOver) { // Only allow clicks if game is not over
-                    score += 10;
+                    score += 5;
                     document.getElementById('score-board').textContent = `Score: ${score}`;
                     object.remove();
                 }
