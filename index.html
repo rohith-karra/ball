@@ -7,29 +7,79 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Save the Fox!</title>
     <style>
-         body {
+        body {
             margin: 0;
             overflow: hidden;
-            background: #0f0a1e; /* Fallback color */
+            background: #0f0a1e;
             font-family: 'Courier New', Courier, monospace;
         }
+
+        #start-menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0f0a1e;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 4px solid #149e2d;
+            color: #98eca8;
+            box-shadow: 0 0 20px rgba(255,107,107,0.3);
+            z-index: 3;
+        }
+
+        #how-to-play {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #98eca8;
+            text-shadow: 2px 2px 0 #000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border: 2px solid #149e2d;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        #instructions-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0f0a1e;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            border: 4px solid #149e2d;
+            color: #98eca8;
+            width: 80%;
+            max-width: 500px;
+            z-index: 4;
+        }
+
         #game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
+            display: none;
         }
+
         .background-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 100px); /* Full height minus ground height */
+            height: calc(100% - 100px);
             background-image: url('bg.png');
             background-size: cover;
-            background-position: center bottom; /* Align to bottom */
+            background-position: center bottom;
             background-repeat: no-repeat;
             z-index: 0;
         }
+
         #ground {
             position: absolute;
             bottom: 0;
@@ -41,31 +91,33 @@
                 #2d180a 10px,
                 #4a2b1a 10px,
                 #4a2b1a 20px
-            ); /* Retro ground pattern */
+            );
             border-top: 4px solid #ff6b6b;
             z-index: 2;
-        }
-        .falling-object, #score-board {
-            z-index: 1;
         }
 
         #fox {
             position: absolute;
-            bottom: 95px; /* Increased from 90px to lift fox higher */
+            bottom: 95px;
             left: 0;
             width: 100px;
             height: 100px;
             background-image: url('fox.png');
-            background-size: contain; /* Changed to contain for better fit */
+            background-size: contain;
             background-repeat: no-repeat;
-            animation: run 5s linear infinite alternate;
             filter: drop-shadow(2px 2px 0 #000);
             z-index: 1;
         }
+
+        .running {
+            animation: run 5s linear infinite alternate;
+        }
+
         @keyframes run {
             0% { left: 0; }
             100% { left: calc(100% - 100px); }
         }
+
         .falling-object {
             position: absolute;
             width: 60px;
@@ -76,15 +128,15 @@
             animation: 
                 float 0.3s ease-in-out infinite alternate,
                 retro-pulse 1s ease-in-out infinite;
-            filter: saturate(200%); /* Removed hue-rotate */
+            filter: saturate(200%);
+            z-index: 1;
         }
-        
 
-    
         @keyframes float {
             from { transform: translateY(0); }
             to { transform: translateY(-5px); }
         }
+
         @keyframes retro-pulse {
             0% { opacity: 0.8; }
             50% { opacity: 1; }
@@ -101,6 +153,7 @@
             background: rgba(0, 0, 0, 0.7);
             padding: 5px 10px;
             border: 2px solid #149e2d;
+            z-index: 1;
         }
 
         #game-over {
@@ -116,8 +169,10 @@
             border: 4px solid #149e2d;
             color: #98eca8;
             box-shadow: 0 0 20px rgba(255,107,107,0.3);
+            z-index: 3;
         }
-        #game-over button {
+
+        button {
             background: #149e2d;
             color: #0f0a1e;
             border: none;
@@ -125,17 +180,36 @@
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            margin: 10px;
             transition: all 0.3s ease;
         }
-        #game-over button:hover {
+
+        button:hover {
             background: #98eca8;
             transform: scale(1.1);
         }
-
     </style>
 </head>
 <body>
+    <div id="start-menu">
+        <h1>Save the Fox!</h1>
+        <p>High Score: <span id="high-score">0</span></p>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="showInstructions()">How to Play</button>
+    </div>
+
+    <div id="instructions-modal">
+        <h2>How to Play</h2>
+        <ul>
+            <li>Click/tap falling fireballs to destroy them</li>
+            <li>Each fireball gives +5 points</li>
+            <li>Game speeds up every 30 seconds</li>
+            <li>Don't let fireballs hit the ground!</li>
+            <li>Protect the fox as long as you can!</li>
+        </ul>
+        <button onclick="closeInstructions()">Close</button>
+    </div>
+
     <div id="game-container">
         <div class="background-image"></div>
         <div id="ground"></div>
@@ -143,58 +217,45 @@
         <div id="score-board">Score: 0</div>
         <div id="game-over">
             <h2>Game Over!</h2>
-            <p>The fox couldn't be saved...</p>
             <p>Final Score: <span id="final-score">0</span></p>
-            <p>High Score: <span id="high-score">0</span></p>
-            <button onclick="startGame()">Try Again</button>
+            <p>High Score: <span id="end-high-score">0</span></p>
+            <button onclick="startGame()">Play Again</button>
         </div>
     </div>
 
     <script>
         let score = 0;
-        let speed = 4; // Initial speed
+        let speed = 4;
         let gameInterval;
         let moveInterval;
         let speedIncreaseInterval;
-        let isGameOver = false; // Track game state
-
-        // Load high score from local storage
+        let isGameOver = false;
         let highScore = localStorage.getItem('highScore') || 0;
-        document.getElementById('high-score').textContent = highScore;
+
+        function showInstructions() {
+            document.getElementById('instructions-modal').style.display = 'block';
+        }
+
+        function closeInstructions() {
+            document.getElementById('instructions-modal').style.display = 'none';
+        }
 
         function createFallingObject() {
             const object = document.createElement('div');
             object.className = 'falling-object';
-            
-            // Adjusted horizontal position calculation
-            const objectWidth = 60; // Match CSS width
-            const maxX = window.innerWidth - objectWidth;
-            const xPos = Math.random() * maxX;
-            object.style.left = `${xPos}px`;
+            const maxX = window.innerWidth - 60;
+            object.style.left = `${Math.random() * maxX}px`;
             object.style.top = '-50px';
 
-            object.addEventListener('click', handleClick);
-            object.addEventListener('touchstart', handleClick);
-
-            function handleClick() {
+            object.addEventListener('click', () => {
                 if (!isGameOver) {
                     score += 5;
                     document.getElementById('score-board').textContent = `Score: ${score}`;
-                    this.remove();
+                    object.remove();
                 }
-            }
-
-            // // Add click event
-            // object.addEventListener('click', () => {
-            //     if (!isGameOver) { // Only allow clicks if game is not over
-            //         score += 5;
-            //         document.getElementById('score-board').textContent = `Score: ${score}`;
-            //         object.remove();
-            //     }
-            // });
+            });
 
             document.getElementById('game-container').appendChild(object);
-            return object;
         }
 
         function moveObjects() {
@@ -203,9 +264,7 @@
                 const currentTop = parseFloat(object.style.top);
                 object.style.top = `${currentTop + speed}px`;
 
-                // End game if any arrow hits the ground
-                const groundHeight = 100; // Fixed ground height
-                if (currentTop > window.innerHeight - groundHeight) { // Adjusted for ground height (if any problem change to 20 0r 40)
+                if (currentTop > window.innerHeight - 100) {
                     endGame();
                     return;
                 }
@@ -213,55 +272,57 @@
         }
 
         function increaseSpeed() {
-            speed += 1; // Increase speed by 1px every 30 seconds
-            console.log(`Speed increased to: ${speed}px per frame`);
+            speed += 1;
+            console.log(`Speed increased to: ${speed}px/frame`);
         }
 
         function endGame() {
-            isGameOver = true; // Set game over state
-
+            isGameOver = true;
             clearInterval(gameInterval);
             clearInterval(moveInterval);
             clearInterval(speedIncreaseInterval);
-
-            // Update high score
+            
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem('highScore', highScore); // Save to local storage
+                localStorage.setItem('highScore', highScore);
+               // document.getElementById('high-score').textContent = highScore;
             }
-
-            // Display final score and high score
-            document.getElementById('final-score').textContent = score;
-            document.getElementById('high-score').textContent = highScore;
+            
             document.getElementById('game-over').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('end-high-score').textContent = highScore;
+
+            document.getElementById('fox').classList.remove('running');
         }
 
         function startGame() {
             // Reset game state
             isGameOver = false;
             score = 0;
-            speed = 4; // Reset speed to initial value
-            document.getElementById('score-board').textContent = `Score: ${score}`;
+            speed = 4;
+            
+            // Show game container
+            document.getElementById('start-menu').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
             document.getElementById('game-over').style.display = 'none';
-
+            document.getElementById('score-board').textContent = 'Score: 0';
+            
             // Clear existing objects
             const objects = document.getElementsByClassName('falling-object');
-            while (objects.length > 0) {
-                objects[0].remove();
-            }
-
-            // Start intervals
-            gameInterval = setInterval(() => {
-                createFallingObject();
-            }, 1000);
-
+            while(objects.length > 0) objects[0].remove();
+            
+            // Start animations
+            document.getElementById('fox').classList.add('running');
+            
+            // Start game loops
+            gameInterval = setInterval(createFallingObject, 1000);
             moveInterval = setInterval(moveObjects, 30);
-
-            // Increase speed every 30 seconds
             speedIncreaseInterval = setInterval(increaseSpeed, 30000);
         }
 
-        startGame();
+        // Initialize game
+        document.getElementById('high-score').textContent = highScore;
+        document.getElementById('game-container').style.display = 'none';
     </script>
 </body>
 </html>
