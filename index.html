@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Save the Fox!</title>
+    <title>Save the T-Rex!</title>
     <style>
         body {
             margin: 0;
@@ -27,6 +27,53 @@
             color: #98eca8;
             box-shadow: 0 0 20px rgba(255,107,107,0.3);
             z-index: 3;
+        }
+        #trex {
+            position: absolute;
+            bottom: 95px;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            background-image: url('spritesheet.png'); /* T-Rex sprite sheet */
+            background-size: 400% 100%;
+            image-rendering: pixelated;
+            z-index: 1;
+            display: none;
+        }
+        .running {
+            animation: 
+                run-sprite 0.5s steps(4) infinite,
+                run-move 6s linear forwards;
+        }
+        .running-reverse {
+            animation: 
+                run-sprite 0.5s steps(4) infinite,
+                run-move-reverse 6s linear forwards;
+        }
+
+        @keyframes run-sprite {
+            0% { background-position: 0 0; }
+            100% { background-position: -400% 0; }
+        }
+        @keyframes run-move {
+            0% { 
+                left: 0;
+                transform: scaleX(1);
+            }
+            100% { 
+                left: calc(100% - 100px);
+                transform: scaleX(1);
+            }
+        }
+        @keyframes run-move-reverse {
+            0% { 
+                left: calc(100% - 100px);
+                transform: scaleX(-1);
+            }
+            100% { 
+                left: 0;
+                transform: scaleX(-1);
+            }
         }
 
         #how-to-play {
@@ -96,7 +143,7 @@
             z-index: 2;
         }
 
-        #fox {
+        /* #fox {
             position: absolute;
             bottom: 95px;
             left: 0;
@@ -107,16 +154,16 @@
             background-repeat: no-repeat;
             filter: drop-shadow(2px 2px 0 #000);
             z-index: 1;
-        }
+        } */
 
-        .running {
+        /* .running {
             animation: run 5s linear infinite alternate;
-        }
+        } */
 
-        @keyframes run {
+        /* @keyframes run {
             0% { left: 0; }
             100% { left: calc(100% - 100px); }
-        }
+        } */
 
         .falling-object {
             position: absolute;
@@ -226,7 +273,7 @@
 </head>
 <body>
     <div id="start-menu">
-        <h1>Save the Fox!</h1>
+        <h1>Save the T-Rex!</h1>
         <p>High Score: <span id="high-score">0</span></p>
         <button onclick="startGame()">Start Game</button>
         <button onclick="showInstructions()">How to Play</button>
@@ -239,7 +286,7 @@
             <li>Each fireball gives +5 points</li>
             <li>Game speeds up every 30 seconds</li>
             <li>Don't let fireballs hit the ground!</li>
-            <li>Protect the fox as long as you can!</li>
+            <li>Protect the T-Rex as long as you can!</li>
         </ul>
         <button onclick="closeInstructions()">Close</button>
     </div>
@@ -247,7 +294,7 @@
     <div id="game-container">
         <div class="background-image"></div>
         <div id="ground"></div>
-        <div id="fox"></div>
+        <div id="trex"></div>
         <div id="score-board">Score: 0</div>
         <div id="game-over">
             <h2>Game Over!</h2>
@@ -265,6 +312,15 @@
         let speedIncreaseInterval;
         let isGameOver = false;
         let highScore = localStorage.getItem('highScore') || 0;
+        let isMovingRight = true;
+        
+        // T-Rex animation handler
+        document.getElementById('trex').addEventListener('animationend', () => {
+            const trex = document.getElementById('trex');
+            trex.classList.remove('running', 'running-reverse');
+            isMovingRight = !isMovingRight;
+            trex.classList.add(isMovingRight ? 'running' : 'running-reverse');
+        });
 
         function showInstructions() {
             document.getElementById('instructions-modal').style.display = 'block';
@@ -325,8 +381,10 @@
             document.getElementById('game-over').style.display = 'block';
             document.getElementById('final-score').textContent = score;
             document.getElementById('end-high-score').textContent = highScore;
+            document.getElementById('trex').classList.remove('running', 'running-reverse');
+            document.getElementById('trex').style.display = 'none';
 
-            document.getElementById('fox').classList.remove('running');
+           // document.getElementById('fox').classList.remove('running');
         }
 
         function startGame() {
@@ -334,19 +392,27 @@
             isGameOver = false;
             score = 0;
             speed = 4;
+            isMovingRight = true;
+
             
             // Show game container
             document.getElementById('start-menu').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
             document.getElementById('game-over').style.display = 'none';
+            document.getElementById('trex').style.display = 'block';
             document.getElementById('score-board').textContent = 'Score: 0';
+           
+            // Start T-Rex animation
+            const trex = document.getElementById('trex');
+            trex.classList.add('running');
+            trex.style.transform = 'scaleX(1)';
             
             // Clear existing objects
             const objects = document.getElementsByClassName('falling-object');
             while(objects.length > 0) objects[0].remove();
             
             // Start animations
-            document.getElementById('fox').classList.add('running');
+            //document.getElementById('fox').classList.add('running');
             
             // Start game loops
             gameInterval = setInterval(createFallingObject, 1000);
