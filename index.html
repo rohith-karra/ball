@@ -7,19 +7,28 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Save the Fox!</title>
     <style>
-        body {
-        margin: 0;
-        overflow: hidden;
-        background-image: url('bg.png');
-        background-size: cover;       /* Ensures image covers full screen */
-        background-position: center;  /* Centers the background image */
-        background-repeat: no-repeat; /* Prevents image tiling */
-        font-family: 'Courier New', Courier, monospace;
+         body {
+            margin: 0;
+            overflow: hidden;
+            background: #0f0a1e; /* Fallback color */
+            font-family: 'Courier New', Courier, monospace;
         }
         #game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
+        }
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 100px); /* Full height minus ground height */
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center bottom; /* Align to bottom */
+            background-repeat: no-repeat;
+            z-index: 0;
         }
         #ground {
             position: absolute;
@@ -34,6 +43,10 @@
                 #4a2b1a 20px
             ); /* Retro ground pattern */
             border-top: 4px solid #ff6b6b;
+            z-index: 2;
+        }
+        #fox, .falling-object, #score-board {
+            z-index: 1;
         }
 
         #fox {
@@ -122,6 +135,7 @@
 </head>
 <body>
     <div id="game-container">
+        <div class="background-image"></div>
         <div id="ground"></div>
         <div id="fox"></div>
         <div id="score-board">Score: 0</div>
