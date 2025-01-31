@@ -35,26 +35,46 @@
             font-size: 24px;
             color: #333;
         }
+
+        #game-over {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="score-board">Score: 0</div>
+        <div id="game-over">
+            <h2>Game Over!</h2>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button onclick="startGame()">Play Again</button>
+        </div>
     </div>
 
     <script>
         let score = 0;
+        let speed = 4; // Initial speed (2x faster)
         let gameInterval;
         let moveInterval;
+        let speedIncreaseInterval;
 
         function createFallingObject() {
             const object = document.createElement('div');
             object.className = 'falling-object';
             
             // Random horizontal position
-            const xPos = Math.random() * (window.innerWidth - 50);
+            const xPos = Math.random() * (window.innerWidth - 70);
             object.style.left = `${xPos}px`;
-            object.style.top = '-50px';
+            object.style.top = '-70px';
 
             // Random color
             const colors = ['#ff4444', '#44ff44', '#4444ff'];
@@ -75,23 +95,51 @@
             const objects = document.getElementsByClassName('falling-object');
             for (let object of objects) {
                 const currentTop = parseFloat(object.style.top);
-                object.style.top = `${currentTop + 2}px`; // Increased speed to 8px per frame
+                object.style.top = `${currentTop + speed}px`;
 
-                // Remove objects that fall off screen
-                if (currentTop > window.innerHeight) {
-                    object.remove();
+                // End game if any ball touches the ground
+                if (currentTop > window.innerHeight - 70) {
+                    endGame();
+                    return;
                 }
             }
         }
 
+        function increaseSpeed() {
+            speed += 1; // Increase speed by 1px every 30 seconds
+            console.log(`Speed increased to: ${speed}px per frame`);
+        }
+
+        function endGame() {
+            clearInterval(gameInterval);
+            clearInterval(moveInterval);
+            clearInterval(speedIncreaseInterval);
+            document.getElementById('game-over').style.display = 'block';
+            document.getElementById('final-score').textContent = score;
+        }
+
         function startGame() {
-            // Create new objects every 800ms
+            // Reset game state
+            score = 0;
+            speed = 4; // Reset speed to initial value
+            document.getElementById('score-board').textContent = `Score: ${score}`;
+            document.getElementById('game-over').style.display = 'none';
+
+            // Clear existing objects
+            const objects = document.getElementsByClassName('falling-object');
+            while (objects.length > 0) {
+                objects[0].remove();
+            }
+
+            // Start intervals
             gameInterval = setInterval(() => {
                 createFallingObject();
-            }, 800);
+            }, 1000);
 
-            // Move objects every 20ms for smoother animation
-            moveInterval = setInterval(moveObjects, 20);
+            moveInterval = setInterval(moveObjects, 30);
+
+            // Increase speed every 30 seconds
+            speedIncreaseInterval = setInterval(increaseSpeed, 30000);
         }
 
         startGame();
