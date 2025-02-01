@@ -1,4 +1,4 @@
-        let score = 0;
+let score = 0;
         let speed = 4;
         let gameInterval;
         let moveInterval;
@@ -26,9 +26,9 @@
         function createFallingObject() {
             const object = document.createElement('div');
             object.className = 'falling-object';
-            const maxX = window.innerWidth - 60;
+            const maxX = window.innerWidth - 120;
             object.style.left = `${Math.random() * maxX}px`;
-            object.style.top = '-50px';
+            object.style.top = '-100px';
 
             object.addEventListener('click', () => {
                 if (!isGameOver) {
@@ -77,7 +77,6 @@
             document.getElementById('trex').classList.remove('running', 'running-reverse');
             document.getElementById('trex').style.display = 'none';
 
-           // document.getElementById('fox').classList.remove('running');
         }
 
         function startGame() {
@@ -103,9 +102,7 @@
             // Clear existing objects
             const objects = document.getElementsByClassName('falling-object');
             while(objects.length > 0) objects[0].remove();
-            
-            // Start animations
-            //document.getElementById('fox').classList.add('running');
+      
             
             // Start game loops
             gameInterval = setInterval(createFallingObject, 1000);
