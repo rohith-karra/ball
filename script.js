@@ -1,4 +1,4 @@
-let score = 0;
+        let score = 0;
         let speed = 4;
         let gameInterval;
         let moveInterval;
@@ -110,7 +110,7 @@ let score = 0;
             // Start game loops
             gameInterval = setInterval(createFallingObject, 1000);
             moveInterval = setInterval(moveObjects, 30);
-            speedIncreaseInterval = setInterval(increaseSpeed, 30000);
+            speedIncreaseInterval = setInterval(increaseSpeed, 15000);
         }
 
         // Initialize game
