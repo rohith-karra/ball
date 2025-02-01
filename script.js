@@ -55,7 +55,7 @@ let score = 0;
         }
 
         function increaseSpeed() {
-            speed += 1;
+            speed += 2;
             console.log(`Speed increased to: ${speed}px/frame`);
         }
 
