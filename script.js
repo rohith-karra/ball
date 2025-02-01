@@ -1,4 +1,4 @@
-let score = 0;
+        let score = 0;
         let speed = 4;
         let gameInterval;
         let moveInterval;
@@ -29,12 +29,23 @@ let score = 0;
             const maxX = window.innerWidth - 120;
             object.style.left = `${Math.random() * maxX}px`;
             object.style.top = '-100px';
+            
+            // Play fireball spawn sound
+            const spawnSound = document.getElementById('fireball-spawn-sound');
+            spawnSound.currentTime = 0; // Reset sound to start
+            spawnSound.volume = 0.5; // Adjust volume (0 to 1)
+            spawnSound.play();
 
             object.addEventListener('click', () => {
                 if (!isGameOver) {
                     score += 5;
                     document.getElementById('score-board').textContent = `Score: ${score}`;
                     object.remove();
+                     // Play fireball click sound
+                    const clickSound = document.getElementById('fireball-click-sound');
+                    clickSound.currentTime = 0; // Reset sound to start
+                    clickSound.volume=0.8;
+                    clickSound.play();
                 }
             });
 
@@ -55,7 +66,7 @@ let score = 0;
         }
 
         function increaseSpeed() {
-            speed += 2;
+            speed += 1;
             console.log(`Speed increased to: ${speed}px/frame`);
         }
 
@@ -76,6 +87,10 @@ let score = 0;
             document.getElementById('end-high-score').textContent = highScore;
             document.getElementById('trex').classList.remove('running', 'running-reverse');
             document.getElementById('trex').style.display = 'none';
+
+            // Stop T-Rex running sound
+            const runningSound = document.getElementById('trex-running-sound');
+            runningSound.pause();
 
         }
 
@@ -98,6 +113,10 @@ let score = 0;
             const trex = document.getElementById('trex');
             trex.classList.add('running');
             trex.style.transform = 'scaleX(1)';
+
+            const runningSound = document.getElementById('trex-running-sound');
+            runningSound.currentTime = 0; // Reset sound to start
+            runningSound.play();
             
             // Clear existing objects
             const objects = document.getElementsByClassName('falling-object');
