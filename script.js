@@ -133,7 +133,7 @@
 
             const fireSound = document.getElementById('fireball-sound');
             fireSound.currentTime = 0; // Reset sound to start
-            fireSound.volume=0.4;
+            fireSound.volume=0.1;
             fireSound.play();
         }
 
