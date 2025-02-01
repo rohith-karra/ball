@@ -135,27 +135,11 @@ body {
 }
 .falling-object {
     position: absolute;
-    width: 60px;
-    height: 50px;
-    background-image: url('fire.png');
+    width: 120px;
+    height: 100px;
+    background-image: url('f12.gif'); /* Local arrow image */
     background-size: cover;
     cursor: pointer;
-    animation: 
-        float 0.3s ease-in-out infinite alternate,
-        retro-pulse 1s ease-in-out infinite;
-    filter: saturate(200%);
-    z-index: 1;
-}
-
-@keyframes float {
-    from { transform: translateY(0); }
-    to { transform: translateY(-5px); }
-}
-
-@keyframes retro-pulse {
-    0% { opacity: 0.8; }
-    50% { opacity: 1; }
-    100% { opacity: 0.8; }
 }
 
 #score-board {
