@@ -30,11 +30,11 @@
             object.style.left = `${Math.random() * maxX}px`;
             object.style.top = '-100px';
             
-            // Play fireball spawn sound
-            const spawnSound = document.getElementById('fireball-spawn-sound');
-            spawnSound.currentTime = 0; // Reset sound to start
-            spawnSound.volume = 0.5; // Adjust volume (0 to 1)
-            spawnSound.play();
+            // // Play fireball spawn sound
+            // const spawnSound = document.getElementById('fireball-spawn-sound');
+            // spawnSound.currentTime = 0; // Reset sound to start
+            // spawnSound.volume = 0.5; // Adjust volume (0 to 1)
+            // spawnSound.play();
 
             object.addEventListener('click', () => {
                 if (!isGameOver) {
@@ -88,6 +88,9 @@
             document.getElementById('trex').classList.remove('running', 'running-reverse');
             document.getElementById('trex').style.display = 'none';
 
+            // Stop fireball sound
+            const fireSound = document.getElementById('fireball-sound');
+            fireSound.pause();
             // Stop T-Rex running sound
             const runningSound = document.getElementById('trex-running-sound');
             runningSound.pause();
@@ -127,6 +130,10 @@
             gameInterval = setInterval(createFallingObject, 1000);
             moveInterval = setInterval(moveObjects, 30);
             speedIncreaseInterval = setInterval(increaseSpeed, 15000);
+
+            const fireSound = document.getElementById('fireball-sound');
+            fireSound.currentTime = 0; // Reset sound to start
+            fireSound.play();
         }
 
         // Initialize game
