@@ -1,5 +1,5 @@
         let score = 0;
-        let speed = 4;
+        let speed = 5;
         let gameInterval;
         let moveInterval;
         let speedIncreaseInterval;
