@@ -44,6 +44,10 @@ function createFallingObject() {
             clickSound.currentTime = 0; // Reset sound to start
             clickSound.volume=0.8;
             clickSound.play();
+
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50); // 50ms vibration
+            }
         }
     });
 
