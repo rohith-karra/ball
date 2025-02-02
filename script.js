@@ -30,11 +30,6 @@
             object.style.left = `${Math.random() * maxX}px`;
             object.style.top = '-100px';
             
-            // // Play fireball spawn sound
-            // const spawnSound = document.getElementById('fireball-spawn-sound');
-            // spawnSound.currentTime = 0; // Reset sound to start
-            // spawnSound.volume = 0.5; // Adjust volume (0 to 1)
-            // spawnSound.play();
 
             object.addEventListener('click', () => {
                 if (!isGameOver) {
@@ -66,7 +61,7 @@
         }
 
         function increaseSpeed() {
-            speed += 1;
+            speed += 2;
             console.log(`Speed increased to: ${speed}px/frame`);
         }
 
@@ -101,7 +96,7 @@
             // Reset game state
             isGameOver = false;
             score = 0;
-            speed = 4;
+            speed = 5;
             isMovingRight = true;
 
             
