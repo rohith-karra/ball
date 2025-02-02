@@ -187,6 +187,22 @@ button:hover {
     background: #98eca8;
     transform: scale(1.1);
 }
+
+/*-- Add this CSS to style.css -*/
+#ad-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #2d180a;
+    color: #ff6b6b;
+    text-align: center;
+    padding: 10px;
+    z-index: 2;
+    border-bottom: 2px solid #149e2d;
+    display: block; /* Hidden when game starts */
+}
+
 @media (max-width: 600px) {
 #start-menu {
     width: 90%;
