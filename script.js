@@ -1,5 +1,5 @@
         let score = 0;
-        let speed = 5;
+        let speed = 4;
         let gameInterval;
         let moveInterval;
         let speedIncreaseInterval;
@@ -96,7 +96,7 @@
             // Reset game state
             isGameOver = false;
             score = 0;
-            speed = 5;
+            speed = 4;
             isMovingRight = true;
 
             
