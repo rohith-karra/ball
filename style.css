@@ -98,6 +98,10 @@ body {
     z-index: 4;
 }
 
+#instructions-modal li {
+    padding: 8px;
+}
+
 #game-container {
     position: relative;
     width: 100vw;
@@ -188,19 +192,29 @@ button:hover {
     transform: scale(1.1);
 }
 
-/*-- Add this CSS to style.css -*/
+/* Add this to style.css */
 #ad-banner {
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100%;
-    background: #2d180a;
-    color: #ff6b6b;
+    background: #0f0a1e;
+    z-index: 3; /* Below start menu (z-index:3) but above background */
+    display: block;
+    /* Automatic height based on content */
+    min-height: 10px;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.ad-content {
+    width: 728px; /* Standard narrow ad width */
+    height: 90px; /* Standard narrow ad height */
+    margin: 0 auto;
+    background: #1a132e;
+    color: #98eca8;
     text-align: center;
     padding: 10px;
-    z-index: 2;
-    border-bottom: 2px solid #149e2d;
-    display: block; /* Hidden when game starts */
 }
 
 @media (max-width: 600px) {

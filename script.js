@@ -152,3 +152,17 @@ function startGame() {
 // Initialize game
 document.getElementById('high-score').textContent = highScore;
 document.getElementById('game-container').style.display = 'none';
+
+// Add this to automatically adjust height
+window.addEventListener('load', () => {
+    const adBanner = document.getElementById('ad-banner');
+    const adContent = document.querySelector('.ad-content');
+    
+    // Set banner height to match ad content
+    adBanner.style.height = `${adContent.offsetHeight}px`;
+    
+    // Update on window resize
+    window.addEventListener('resize', () => {
+        adBanner.style.height = `${adContent.offsetHeight}px`;
+    });
+});
