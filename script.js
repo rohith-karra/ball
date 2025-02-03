@@ -10,6 +10,10 @@ let isMovingRight = true;
 let baseSpawnInterval = 1000; // Start with 1 second
 let pointsPerFireball = 5;
 
+let health = 3;  // Player starts with 3 hearts
+let speedReductionFactor = 0.5;  // Reduce game speed when losing a heart
+
+
 // T-Rex animation handler
 document.getElementById('trex').addEventListener('animationend', () => {
     const trex = document.getElementById('trex');
@@ -46,7 +50,7 @@ function createFallingObject() {
             clickSound.play();
 
             if ('vibrate' in navigator) {
-                navigator.vibrate(50); // 50ms vibration
+                //navigator.vibrate(50); // 50ms vibration
             }
         }
     });
@@ -61,11 +65,38 @@ function moveObjects() {
         object.style.top = `${currentTop + speed}px`;
 
         if (currentTop > window.innerHeight - 100) {
-            endGame();
-            return;
+            //endGame(); //previous where game ends for first metoor hit
+            //return;
+            loseHealth();
+            object.remove(); // Remove the meteor
         }
     }
 }
+
+function loseHealth() {
+    if (health > 0) {
+        let heart = document.getElementById(`heart${health}`);
+        
+        // Apply shake effect
+        heart.classList.add("shake");
+
+
+        // Wait for shake animation to complete, then fade out
+        setTimeout(() => {
+            heart.style.opacity = "0.2"; // Fade out heart
+            heart.classList.remove("shake"); // Remove shake class after animation
+        }, 500);
+
+        health--;
+        speed *= speedReductionFactor; // Slow down the game a bit
+
+        if (health === 0) {
+            endGame();
+        }
+    }
+}
+
+
 
 function increaseSpeed() {
     speed += 1;
@@ -123,19 +154,25 @@ function startGame() {
 
     // Show game container
     document.getElementById('start-menu').style.display = 'none';
+    document.getElementById("start-menu").style.animation = "fadeOut 0.8s ease-in-out forwards";
+
     document.getElementById('game-container').style.display = 'block';
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('trex').style.display = 'block';
     document.getElementById('score-board').textContent = 'Score: 0';
+    document.getElementById('health-bar').style.display = 'flex';
+
+
    
     // Start T-Rex animation
     const trex = document.getElementById('trex');
     trex.classList.add('running');
     trex.style.transform = 'scaleX(1)';
 
-    const runningSound = document.getElementById('trex-running-sound');
-    runningSound.currentTime = 0; // Reset sound to start
-    runningSound.play();
+    //trex sound will add if necessary in future
+    // const runningSound = document.getElementById('trex-running-sound');
+    // runningSound.currentTime = 0; // Reset sound to start
+    // runningSound.play(); 
     
     // Clear existing objects
     const objects = document.getElementsByClassName('falling-object');
@@ -151,13 +188,21 @@ function startGame() {
     fireSound.currentTime = 0; // Reset sound to start
     fireSound.volume=0.1;
     fireSound.play();
+
+    //for health bars
+    health = 3;
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById(`heart${i}`).style.opacity = "1"; // Restore all hearts
+    }
 }
+
 
 // Initialize game
 document.getElementById('high-score').textContent = highScore;
 document.getElementById('game-container').style.display = 'none';
 
-// Add this to automatically adjust height
+/*
+//Add this to automatically adjust height when u add ads
 window.addEventListener('load', () => {
     const adBanner = document.getElementById('ad-banner');
     const adContent = document.querySelector('.ad-content');
@@ -169,4 +214,4 @@ window.addEventListener('load', () => {
     window.addEventListener('resize', () => {
         adBanner.style.height = `${adContent.offsetHeight}px`;
     });
-});
+}); */
