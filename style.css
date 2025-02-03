@@ -158,6 +158,44 @@ body {
     cursor: pointer;
 }
 
+/* Special Meteor (Glowing Effect) */
+.special-meteor {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #ffdd44, #ff6600);
+    border-radius: 50%;
+    position: absolute;
+    cursor: pointer;
+    animation: glow 1s infinite alternate ease-in-out;
+}
+
+/* Glowing Effect */
+@keyframes glow {
+    from {
+        box-shadow: 0px 0px 5px rgba(255, 215, 0, 0.7);
+    }
+    to {
+        box-shadow: 0px 0px 15px rgba(255, 165, 0, 1);
+    }
+}
+
+@keyframes screenFlash {
+    0% { background-color: rgba(255, 255, 0, 0.7); }
+    100% { background-color: transparent; }
+}
+
+/* Apply flash effect to the whole screen */
+.screen-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    animation: screenFlash 0.3s ease-in-out;
+}
+
+
 #score-board {
     position: fixed;
     top: 20px;
@@ -211,14 +249,7 @@ body {
 .shake {
     animation: shake 0.5s ease-in-out;
 }
-/* Bouncing Effect */
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-.heart.bounce {
-    animation: bounce 0.5s infinite ease-in-out;
-}
+
 button {
     background: #149e2d;
     color: #0f0a1e;

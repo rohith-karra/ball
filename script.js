@@ -11,7 +11,6 @@ let baseSpawnInterval = 1000; // Start with 1 second
 let pointsPerFireball = 5;
 
 let health = 3;  // Player starts with 3 hearts
-let speedReductionFactor = 0.8;  // Reduce game speed when losing a heart
 
 
 // T-Rex animation handler
@@ -30,17 +29,46 @@ function closeInstructions() {
     document.getElementById('instructions-modal').style.display = 'none';
 }
 
+//for special meteor
+function flashScreen() {
+    let flashDiv = document.createElement("div");
+    flashDiv.classList.add("screen-flash");
+
+    document.body.appendChild(flashDiv); // Add flash effect
+
+    setTimeout(() => {
+        flashDiv.remove(); // Remove the flash after 0.3 seconds
+    }, 300);
+}
+
+
+
 function createFallingObject() {
     const object = document.createElement('div');
     object.className = 'falling-object';
     const maxX = window.innerWidth - 120;
     object.style.left = `${Math.random() * maxX}px`;
     object.style.top = '-100px';
-    
+
+    let isSpecial = Math.random() < 0.1; //special meteor
+    if (isSpecial) {
+        object.classList.add('special-meteor');
+    }
 
     object.addEventListener('click', () => {
         if (!isGameOver) {
-            score += pointsPerFireball; //points increase as the game speeds
+            if (object.classList.contains('special-meteor')) { // Use class check
+                score += pointsPerFireball * 3; // Triple points for special meteors
+                
+                if (health < 3) {
+                    health++;
+                    restoreHeart(health); // Restore a heart visually
+                }
+                flashScreen(); // Optional screen flash effect
+            } 
+            else{
+                score += pointsPerFireball; //points increase
+            }
             document.getElementById('score-board').textContent = `Score: ${score}`;
             object.remove();
              // Play fireball click sound
@@ -76,7 +104,6 @@ function startMeteorSpawn() {
     function spawnMeteor() {
         if (!isGameOver) {
             createFallingObject();
-            
             // Randomized spawn interval (between 50% and 150% of baseSpawnInterval)
             let randomInterval = Math.random() * (baseSpawnInterval * 1.5 - baseSpawnInterval * 0.5) + baseSpawnInterval * 0.5;
             
@@ -92,36 +119,30 @@ function loseHealth() {
         
         // Apply shake effect
         heart.classList.add("shake");
-        heart.classList.add("bounce");
-
-
         // Wait for shake animation to complete, then fade out
         setTimeout(() => {
             heart.style.opacity = "0.2"; // Fade out heart
             heart.classList.remove("shake"); // Remove shake class after animation
-            heart.classList.remove("bounce"); // Remove bounce class after animation
-
         }, 500);
 
         health--;
-        speed *= speedReductionFactor; // Slow down the game a bit
-
         if (health === 0) {
             endGame();
         }
     }
 }
 
-
-
+function restoreHeart(heartNumber) {
+    let heart = document.getElementById(`heart${heartNumber}`);
+    if (heart) {
+        heart.style.opacity = "1"; // Fully restore the heart
+    }
+}
 function increaseSpeed() {
     speed += Math.random() * 1.5 + 0.5;;
     // Increase points and spawn rate
     pointsPerFireball += 2;
     baseSpawnInterval = Math.max(300, baseSpawnInterval - (Math.random() * 100 + 100)); // Reduce by 100-200ms
-
-    //clearInterval(gameInterval);
-    //gameInterval = setInterval(createFallingObject, baseSpawnInterval);
     console.log(`Speed: ${speed}px/frame | Points: +${pointsPerFireball} | Spawn: ${baseSpawnInterval}ms`);
 
 }
@@ -175,8 +196,6 @@ function startGame() {
     document.getElementById('trex').style.display = 'block';
     document.getElementById('score-board').textContent = 'Score: 0';
     document.getElementById('health-bar').style.display = 'flex';
-    let heart = document.getElementById(`heart${health}`);
-    heart.classList.add("bounce");
 
     startMeteorSpawn();
 
@@ -193,10 +212,11 @@ function startGame() {
     // Clear existing objects
     const objects = document.getElementsByClassName('falling-object');
     while(objects.length > 0) objects[0].remove();
-
+    const objects1 = document.getElementsByClassName('special-meteor');
+    while(objects1.length > 0) objects1[0].remove();
     
     // Start game loops
-    //gameInterval = setInterval(createFallingObject, 1000);
+    gameInterval = setInterval(createFallingObject, 1000);
     moveInterval = setInterval(moveObjects, 30);
     speedIncreaseInterval = setInterval(increaseSpeed, 15000);
 
