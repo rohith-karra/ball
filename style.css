@@ -166,6 +166,8 @@ body {
     border-radius: 50%;
     position: absolute;
     cursor: pointer;
+    padding: 30px;
+    box-sizing: content-box; 
     animation: glow 1s infinite alternate ease-in-out;
 }
 
