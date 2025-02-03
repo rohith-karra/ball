@@ -11,7 +11,7 @@ let baseSpawnInterval = 1000; // Start with 1 second
 let pointsPerFireball = 5;
 
 let health = 3;  // Player starts with 3 hearts
-let speedReductionFactor = 0.5;  // Reduce game speed when losing a heart
+let speedReductionFactor = 0.8;  // Reduce game speed when losing a heart
 
 
 // T-Rex animation handler
