@@ -99,19 +99,6 @@ function moveObjects() {
     }
 }
 
-// Function to randomly spawn meteors
-function startMeteorSpawn() {
-    function spawnMeteor() {
-        if (!isGameOver) {
-            createFallingObject();
-            // Randomized spawn interval (between 50% and 150% of baseSpawnInterval)
-            let randomInterval = Math.random() * (baseSpawnInterval * 1.5 - baseSpawnInterval * 0.5) + baseSpawnInterval * 0.5;
-            
-            setTimeout(spawnMeteor, randomInterval);
-        }
-    }
-    spawnMeteor();
-}
 
 function loseHealth() {
     if (health > 0) {
@@ -142,7 +129,10 @@ function increaseSpeed() {
     speed += Math.random() * 1.5 + 0.5;;
     // Increase points and spawn rate
     pointsPerFireball += 2;
-    baseSpawnInterval = Math.max(300, baseSpawnInterval - (Math.random() * 100 + 100)); // Reduce by 100-200ms
+    baseSpawnInterval = Math.max(300, baseSpawnInterval - 150); // Never go below 300ms
+    clearInterval(gameInterval);
+    gameInterval = setInterval(createFallingObject, baseSpawnInterval);
+    
     console.log(`Speed: ${speed}px/frame | Points: +${pointsPerFireball} | Spawn: ${baseSpawnInterval}ms`);
 
 }
@@ -196,8 +186,6 @@ function startGame() {
     document.getElementById('trex').style.display = 'block';
     document.getElementById('score-board').textContent = 'Score: 0';
     document.getElementById('health-bar').style.display = 'flex';
-
-    startMeteorSpawn();
 
     // Start T-Rex animation
     const trex = document.getElementById('trex');
