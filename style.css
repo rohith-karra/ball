@@ -166,7 +166,7 @@ body {
     border-radius: 50%;
     position: absolute;
     cursor: pointer;
-    padding: 30px;
+    border: 20px solid transparent; /* Invisible clickable area */
     box-sizing: content-box; 
     animation: glow 1s infinite alternate ease-in-out;
 }
