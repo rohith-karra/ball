@@ -211,14 +211,7 @@ body {
 .shake {
     animation: shake 0.5s ease-in-out;
 }
-/* Bouncing Effect */
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-.heart.bounce {
-    animation: bounce 0.5s infinite ease-in-out;
-}
+
 button {
     background: #149e2d;
     color: #0f0a1e;
