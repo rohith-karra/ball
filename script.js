@@ -129,7 +129,7 @@ function increaseSpeed() {
     speed += Math.random() * 1.5 + 0.5;;
     // Increase points and spawn rate
     pointsPerFireball += 2;
-    baseSpawnInterval = Math.max(300, baseSpawnInterval - 150); // Never go below 300ms
+    baseSpawnInterval = Math.max(500, baseSpawnInterval - 100); // Never go below 300ms
     clearInterval(gameInterval);
     gameInterval = setInterval(createFallingObject, baseSpawnInterval);
     
