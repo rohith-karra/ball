@@ -50,7 +50,7 @@ function createFallingObject() {
             clickSound.play();
 
             if ('vibrate' in navigator) {
-                //navigator.vibrate(50); // 50ms vibration
+                navigator.vibrate(50); // 50ms vibration
             }
         }
     });
@@ -65,12 +65,25 @@ function moveObjects() {
         object.style.top = `${currentTop + speed}px`;
 
         if (currentTop > window.innerHeight - 100) {
-            //endGame(); //previous where game ends for first metoor hit
-            //return;
             loseHealth();
             object.remove(); // Remove the meteor
         }
     }
+}
+
+// Function to randomly spawn meteors
+function startMeteorSpawn() {
+    function spawnMeteor() {
+        if (!isGameOver) {
+            createFallingObject();
+            
+            // Randomized spawn interval (between 50% and 150% of baseSpawnInterval)
+            let randomInterval = Math.random() * (baseSpawnInterval * 1.5 - baseSpawnInterval * 0.5) + baseSpawnInterval * 0.5;
+            
+            setTimeout(spawnMeteor, randomInterval);
+        }
+    }
+    spawnMeteor();
 }
 
 function loseHealth() {
@@ -86,6 +99,8 @@ function loseHealth() {
         setTimeout(() => {
             heart.style.opacity = "0.2"; // Fade out heart
             heart.classList.remove("shake"); // Remove shake class after animation
+            heart.classList.remove("bounce"); // Remove bounce class after animation
+
         }, 500);
 
         health--;
@@ -100,14 +115,15 @@ function loseHealth() {
 
 
 function increaseSpeed() {
-    speed += 1;
+    speed += Math.random() * 1.5 + 0.5;;
     // Increase points and spawn rate
     pointsPerFireball += 2;
-    baseSpawnInterval = Math.max(300, baseSpawnInterval - 150); // Never go below 300ms
+    baseSpawnInterval = Math.max(300, baseSpawnInterval - (Math.random() * 100 + 100)); // Reduce by 100-200ms
 
-    clearInterval(gameInterval);
-    gameInterval = setInterval(createFallingObject, baseSpawnInterval);
+    //clearInterval(gameInterval);
+    //gameInterval = setInterval(createFallingObject, baseSpawnInterval);
     console.log(`Speed: ${speed}px/frame | Points: +${pointsPerFireball} | Spawn: ${baseSpawnInterval}ms`);
+
 }
 
 function endGame() {
@@ -119,7 +135,6 @@ function endGame() {
     if (score > highScore) {
         highScore = score;
         localStorage.setItem('highScore', highScore);
-       // document.getElementById('high-score').textContent = highScore;
     }
     
     document.getElementById('game-over').style.display = 'block';
@@ -133,11 +148,9 @@ function endGame() {
 
 
     // Stop fireball sound
-    const fireSound = document.getElementById('fireball-sound');
-    fireSound.pause();
+    document.getElementById('fireball-sound').pause();
     // Stop T-Rex running sound
-    const runningSound = document.getElementById('trex-running-sound');
-    runningSound.pause();
+    document.getElementById('trex-running-sound').pause();
 
 }
 
@@ -165,8 +178,8 @@ function startGame() {
     let heart = document.getElementById(`heart${health}`);
     heart.classList.add("bounce");
 
+    startMeteorSpawn();
 
-   
     // Start T-Rex animation
     const trex = document.getElementById('trex');
     trex.classList.add('running');
@@ -183,7 +196,7 @@ function startGame() {
 
     
     // Start game loops
-    gameInterval = setInterval(createFallingObject, 1000);
+    //gameInterval = setInterval(createFallingObject, 1000);
     moveInterval = setInterval(moveObjects, 30);
     speedIncreaseInterval = setInterval(increaseSpeed, 15000);
 
