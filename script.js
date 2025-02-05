@@ -12,6 +12,65 @@ let pointsPerFireball = 5;
 
 let health = 3;  // Player starts with 3 hearts
 
+let isPaused = false;
+let isSoundOn = true;
+let isVibrationOn = true;
+
+document.getElementById('pause-button').addEventListener('click', pauseGame);
+
+// Pause Game Function
+function pauseGame() {
+    isPaused = true;
+    clearInterval(gameInterval);
+    clearInterval(moveInterval);
+    clearInterval(speedIncreaseInterval);
+    document.getElementById('pause-modal').style.display = 'block';
+    document.getElementById('trex').style.display = 'none';
+
+    // Pause sounds
+    document.getElementById('fireball-sound').pause();
+}
+
+// Resume Game Function
+function resumeGame() {
+    isPaused = false;
+    document.getElementById('pause-modal').style.display = 'none';
+    document.getElementById('trex').style.display = 'block';
+
+
+    // Resume game intervals
+    gameInterval = setInterval(createFallingObject, baseSpawnInterval);
+    moveInterval = setInterval(moveObjects, 30);
+    speedIncreaseInterval = setInterval(increaseSpeed, 15000);
+
+    // Resume sounds if sound is on
+    if (isSoundOn) {
+        document.getElementById('fireball-sound').play();
+        //document.getElementById('trex-running-sound').play();
+    }
+}
+
+// Sound Toggle
+document.getElementById('sound-toggle').addEventListener('click', () => {
+    isSoundOn = !isSoundOn;
+    document.getElementById('sound-toggle').textContent = `Sound: ${isSoundOn ? 'On' : 'Off'}`;
+
+    // Pause or play sounds based on toggle
+    if (isSoundOn && !isPaused) {
+        document.getElementById('fireball-sound').play();
+       // document.getElementById('trex-running-sound').play();
+    } else {
+        document.getElementById('fireball-sound').pause();
+       // document.getElementById('trex-running-sound').pause();
+    }
+});
+
+// Vibration Toggle
+document.getElementById('vibration-toggle').addEventListener('click', () => {
+    isVibrationOn = !isVibrationOn;
+    document.getElementById('vibration-toggle').textContent = `Vibration: ${isVibrationOn ? 'On' : 'Off'}`;
+});
+
 
 // T-Rex animation handler
 document.getElementById('trex').addEventListener('animationend', () => {
@@ -71,14 +130,17 @@ function createFallingObject() {
             }
             document.getElementById('score-board').textContent = `Score: ${score}`;
             object.remove();
-             // Play fireball click sound
-            const clickSound = document.getElementById('fireball-click-sound');
-            clickSound.currentTime = 0; // Reset sound to start
-            clickSound.volume=0.8;
-            clickSound.play();
 
-            if ('vibrate' in navigator) {
-                navigator.vibrate(50); // 50ms vibration
+             // Play sound if sound is on
+            if (isSoundOn) {
+                const clickSound = document.getElementById('fireball-click-sound');
+                clickSound.currentTime = 0;
+                clickSound.volume = 0.8;
+                clickSound.play();
+            }
+             // Vibrate if vibration is on
+            if (isVibrationOn && 'vibrate' in navigator) {
+                navigator.vibrate(50);
             }
         }
     });
@@ -129,7 +191,7 @@ function increaseSpeed() {
     speed += Math.random() * 1.5 + 0.5;;
     // Increase points and spawn rate
     pointsPerFireball += 2;
-    baseSpawnInterval = Math.max(500, baseSpawnInterval - 100); // Never go below 300ms
+    baseSpawnInterval = Math.max(300, baseSpawnInterval - 150); // Never go below 300ms
     clearInterval(gameInterval);
     gameInterval = setInterval(createFallingObject, baseSpawnInterval);
     
@@ -186,6 +248,9 @@ function startGame() {
     document.getElementById('trex').style.display = 'block';
     document.getElementById('score-board').textContent = 'Score: 0';
     document.getElementById('health-bar').style.display = 'flex';
+
+    document.getElementById('pause-button').style.display = 'block';
+
 
     // Start T-Rex animation
     const trex = document.getElementById('trex');

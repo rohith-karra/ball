@@ -160,25 +160,13 @@ body {
 
 /* Special Meteor (Glowing Effect) */
 .special-meteor {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     background: radial-gradient(circle, #ffdd44, #ff6600);
     border-radius: 50%;
     position: absolute;
     cursor: pointer;
-    position: relative;
     animation: glow 1s infinite alternate ease-in-out;
-}
-.special-meteor::before {
-  content: '';
-  position: absolute;
-  top: -25px;
-  left: -25px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: transparent;
-  cursor: pointer;
 }
 
 /* Glowing Effect */
@@ -347,4 +335,50 @@ button:hover {
     margin: 8px 0;
     font-size: 14px;
 }
+}
+
+/* Pause Button */
+.pause-button {
+    position: fixed;
+    display: none;
+    top: 10px;  /* Adjust as needed */
+    left: 50%;
+    font-size: 24px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #149e2d;
+    color: #98eca8;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 3;
+    transition: all 0.3s ease;
+    border-radius: 5px; /* Rounded for a sleek look */
+}
+
+.pause-button:hover {
+    background: #149e2d;
+    transform: scale(1.1);
+}
+
+/* Pause Modal */
+.pause-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #0f0a1e;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 4px solid #149e2d;
+    color: #98eca8;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+    z-index: 4;
+}
+
+.pause-modal button {
+    display: block;
+    margin: 10px auto;
+    width: 80%;
+    max-width: 200px;
 }

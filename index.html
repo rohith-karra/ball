@@ -6,9 +6,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Save the T-Rex!</title>
-    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="icon" type="image/png" href="assets/exp.png">
     <!-- For iOS devices -->
-    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="apple-touch-icon" href="assets/exp.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -37,6 +37,17 @@
         </ul>
         <button onclick="closeInstructions()">Close</button>
     </div>
+    <!-- Add this inside the <body> -->
+    <button id="pause-button" class="pause-button">⏸️</button>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="pause-modal">
+        <h2>Paused</h2>
+        <button onclick="resumeGame()">Resume</button>
+        <button id="sound-toggle">Sound: On</button>
+        <button id="vibration-toggle">Vibration: On</button>
+    </div>
+
     <div id="health-bar" class="bounce">
         <span class="heart" id="heart1">❤️</span>
         <span class="heart" id="heart2">❤️</span>
